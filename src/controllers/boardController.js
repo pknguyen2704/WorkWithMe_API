@@ -1,16 +1,25 @@
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
+import { boardService } from '~/services/boardService'
 const createNew = async (req, res, next) => {
 
   try {
-    console.log('request body final', req.body)
-    // throw new ApiError(StatusCodes.BAD_GATEWAY, 'Loi vlin')
-    res.status(StatusCodes.CREATED).json({ message:'ControllerLayer: API create new board' })
+    const createBoard = await boardService.createNew(req.body)
+    res.status(StatusCodes.CREATED).json(createBoard)
   } catch (error) {
     next(error)
   }
 }
-
+const getDetails = async (req, res, next) => {
+  try {
+    const boardID = req.params.id
+    const board = await boardService.getDetails(boardID)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
+}
 export const boardController = {
-  createNew
+  createNew,
+  getDetails
 }
